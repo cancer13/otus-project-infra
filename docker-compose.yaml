@@ -1,0 +1,63 @@
+version: '3.3'
+services:
+  mongo:
+    container_name: mongo
+    hostname: mongo
+    image: mongo:4.4
+    ports:
+      - 27017:27017/tcp
+    volumes:
+      - mongo:/data/db
+    networks:
+      - otus-project
+
+  rabbit:
+    container_name: rabbit
+    hostname: rabbit
+    image: rabbitmq:3.11.2-alpine
+    networks:
+      - otus-project
+
+  crawler:
+    container_name: crawler
+    hostname: crawler
+    image: ${DOCKER_LOGIN}/search_engine_crawler:latest
+    environment:
+      - RMQ_HOST=rabbit
+      - RMQ_QUEUE=urls
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - EXCLUDE_URLS=""
+      - CHECK_INTERVAL=10
+      - MONGO=mongo
+      - MONGO_PORT=27017
+      - URL=http://info.cern.ch/
+    depends_on:
+      - mongo
+      - rabbit
+    networks:
+      - otus-project
+
+  ui:
+    container_name: ui
+    hostname: ui
+    image: ${DOCKER_LOGIN}/search_engine_ui:latest
+    environment:
+      - MONGO=mongo
+      - MONGO_PORT=27017
+      - FLASK_APP=ui.py
+    ports:
+      - 8000:8000/tcp
+    networks:
+      - otus-project
+    depends_on:
+      - crawler
+
+volumes:
+  mongo:
+
+networks:
+  otus-project:
+    driver: bridge
+    driver_opts:
+      subnet: 10.0.1.0/24

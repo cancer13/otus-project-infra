@@ -15,33 +15,28 @@ zone             = "ru-central1-a" # Зона в облаке
 public_key_path  = "~/.ssh/id_rsa.pub" # путь к ключу для подключения к хостам
 region_id = "ru-central1" # Регион в облаке
 service_account_key_file = "/PATH/TO/key.json" # путь к ключу для сервисного аккаунта с ролью edit
+network_id                = "ID_СЕТИ"
+runner_registration_token = "ТОКЕН" # для подключения воркера к gitlab.com
 ```
-
-!!Необходимо организовать vpn туннель во внутреннюю сеть облака
-
-<!-- TODO найти вариант делать без VPN (ставить gitlab без helm_release?) -->
-В ходе выполнения terraform, требуется подключить VPN
 
 Находясь в `infra/terraform` выполнить `terraform init` и `terraform apply`
 
-Выполнение terraform добавит параметры подключения к k8s,  локально выполнится `yc managed-kubernetes cluster get-credentials ${yandex_kubernetes_cluster.k8s-cluster.id} --internal --force`
+Выполнение terraform добавит параметры подключения к k8s,  локально выполнится `yc managed-kubernetes cluster get-credentials ${yandex_kubernetes_cluster.k8s-cluster.id} --external --force`
 
 
-Получаем пароль от УЗ root gitlab'а 
-```
-base64 -d <<< $(kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' -n gitlab)
-```
 
 
 # Status
 - Добавлены Dockerfile в репозитории приложений
 - Собран рабочий экземпляр приложения в docker-compose
 - Написаны пайплайны с тестом и билдом (.gitlab-ci)
+- Terraform в Object Storage (это важно)
 - Составлена конфигурация terraform
   - Добавляет подсеть
   - Подымает k8s от yandex cloud
   - Подымает nginx-ingres в k8s через helm_release
   - Подымает gitlab в k8s через helm_release
+- Подключен runner к gitlab.com
 
 # Notes
 Что бы разобраться с архитектурой приложения, зависимостями и версиями собрал контейнеры на локальной машине, а так же поднял вместе с окружением и переменными через docker-compose.

@@ -20,9 +20,25 @@ resource "kubernetes_cluster_role_binding" "gitlab-admin" {
   subject {
     kind      = "ServiceAccount"
     name      = "default"
-    namespace = "${helm_release.gitlab.namespace}"
+    namespace = "${helm_release.gitlab-runner.namespace}"
   }
   depends_on = [
-    helm_release.gitlab
+    helm_release.gitlab-runner
   ]
 }
+
+// resource "kubernetes_secret" "gitlab-runner" {
+//   metadata {
+//     name      = "gitlab-runner"
+//     namespace = "gitlab-runner"
+//   }
+
+//   data = {
+//     runner-registration-token = "${var.runner_registration_token}"
+//     runner-token              = ""
+//   }
+//   type = "Opaque"
+//   depends_on = [
+//     helm_release.gitlab-runner
+//   ]
+// }

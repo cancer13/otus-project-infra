@@ -1,8 +1,10 @@
 variable "cloud_id" {
   description = "Yandex cloud ID"
+  sensitive = true
 }
 variable "folder_id" {
   description = "Yandex cloud folder"
+  sensitive = true
 }
 variable "zone" {
   description = "Yandex cloud zone"
@@ -14,6 +16,7 @@ variable "region_id" {
 }
 variable "public_key_path" {
   description = "Path to the public key used for ssh access"
+  sensitive = true
 }
 variable "count_inst" {
   description = "How many instances?"
@@ -24,6 +27,11 @@ variable "service_account_key_file" {
 }
 variable "network_id" {
   description = "id сети облака"
+}
+
+variable "runner_registration_token" {
+  description = "токен регистрации раннера на gitlab.com"
+  sensitive = true
 }
 
 variable "helm_timeout" {
@@ -51,8 +59,4 @@ variable "ingress_controller" {
   default     = "ingress-nginx"
 }
 ###
-variable "namespace" {
-  description = "Namespace"
-  type        = string
-  default     = "dev"
-}
+

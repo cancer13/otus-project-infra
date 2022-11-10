@@ -82,7 +82,7 @@ resource "yandex_kubernetes_cluster" "k8s-cluster" {
   network_policy_provider = "CALICO"
 
   provisioner "local-exec" {
-    command = "yc managed-kubernetes cluster get-credentials ${yandex_kubernetes_cluster.k8s-cluster.id} --internal --force"
+    command = "yc managed-kubernetes cluster get-credentials ${yandex_kubernetes_cluster.k8s-cluster.id} --external --force"
   }
   depends_on = [
     yandex_iam_service_account.k8s-sa,
@@ -104,8 +104,8 @@ resource "yandex_kubernetes_node_group" "k8s-nodes" {
       subnet_ids         = [yandex_vpc_subnet.k8s-subnet.id]
     }
     resources {
-      memory = 8
-      cores  = 4
+      memory = 4
+      cores  = 2
       gpus = 0
       // core_fraction = 50
     }

@@ -22,7 +22,9 @@ variable "count_inst" {
 variable "service_account_key_file" {
   description = "SA key file path"
 }
-
+variable "network_id" {
+  description = "id сети облака"
+}
 
 variable "helm_timeout" {
   description = "Timeout value to wailt for helm chat deployment"

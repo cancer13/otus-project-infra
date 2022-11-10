@@ -18,9 +18,9 @@ services:
     networks:
       - otus-project
 
-  crawler:
-    container_name: crawler
-    hostname: crawler
+  app:
+    container_name: app
+    hostname: app
     image: ${DOCKER_LOGIN}/search_engine_crawler:latest
     environment:
       - RMQ_HOST=rabbit
@@ -51,7 +51,7 @@ services:
     networks:
       - otus-project
     depends_on:
-      - crawler
+      - app
 
 volumes:
   mongo:

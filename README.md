@@ -1,7 +1,13 @@
 # how2run
 Инфраструктура разворачивается на мощностях [yandex cloud](https://cloud.yandex.ru).
 
-[Установить yc cli](https://cloud.yandex.ru/docs/cli/operations/install-cli).
+### Пререквезиты:
+  Установить:\
+    [yc cli](https://cloud.yandex.ru/docs/cli/operations/install-cli).\
+    jq (`brew install jq` on mac)\
+    [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)\
+    [kubectl](https://kubernetes.io/docs/tasks/tools/)\
+    [Создать s3 в yandex cloud](https://cloud.yandex.ru/docs/tutorials/infrastructure-management/terraform-state-storage)
 
 Выполнить `infra/terraform/yc_sa_create.sh`, генерирует SA для терраформа, путь до полученного ключа после вносится в terraform.tfvars
 
@@ -19,9 +25,13 @@ network_id                = "ID_СЕТИ"
 runner_registration_token = "ТОКЕН" # для подключения воркера к gitlab.com
 ```
 
-Находясь в `infra/terraform` выполнить `terraform init` и `terraform apply`
+Для сохрания состояния на s3 выполнить:
+```
+export ENV.AWS_ACCESS_KEY_ID=ВАШ_ACCESS_КЛЮЧ_ID
+export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
+```
 
-Выполнение terraform добавит параметры подключения к k8s,  локально выполнится `yc managed-kubernetes cluster get-credentials ${yandex_kubernetes_cluster.k8s-cluster.id} --external --force`
+Находясь в `infra/terraform` выполнить `terraform init` и `terraform apply`
 
 
 

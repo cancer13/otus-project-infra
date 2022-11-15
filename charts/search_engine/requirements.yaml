@@ -4,14 +4,14 @@ dependencies:
     version: "0.1.0"
     repository: "file://../ui"
 
-  - name: app
+  - name: crawler
     version: "0.1.0"
-    repository: "file://../post"
+    repository: "file://../crawler"
 
-  - name: rabbit
-    version: "11.1.1"
-    repository: "https://charts.bitnami.com/bitnami"
+  - name: rabbitmq
+    version: "0.1.0"
+    repository: "file://../rabbitmq"
 
-  - name: mongo
-    version: "11.2.0"
-    repository: "https://charts.bitnami.com/bitnami"
+  - name: mongodb
+    version: "0.1.0"
+    repository: "file://../mongodb"

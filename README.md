@@ -68,3 +68,8 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
 Итог факапа:
   - подключи s3 для терраформ
   - решил использовать только gitlab-runner в кубере (по идее должно работать так же как на последней ДЗ, только код и вебморда на gitlab)
+
+ingress-controller через Helm
+```
+helm install ingress-nginx  ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
+```

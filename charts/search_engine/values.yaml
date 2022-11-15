@@ -1,17 +1,32 @@
 ---
-app:
+crawler:
   image:
-    repository: cancer13/post
-    tag: latest
+    repository: cancer13/search_engine_crawler
+    tag: ""
   service:
-    externalPort: 5000
+    port: 8000
+  env:
+    RMQ_HOST: ""
+    EXCLUDE_URLS: ""
+    CHECK_INTERVAL: "10"
+    MONGO: ""
+    MONGO_PORT: "27017"
+    URL: "http://info.cern.ch/"
 
 ui:
   image:
-    repository: cancer13/ui
-    tag: latest
+    repository: cancer13/search_engine_ui
+    tag: ""
   service:
-    externalPort: 8000
+    port: 8000
+  mongoHost: ""
+  mongoPort: "27017"
   ingress:
-    path: /
-    host: dev
+    enabled: true
+    className: "nginx"
+    annotations: {}
+    hosts:
+      - host: localhost
+        paths:
+          - path: /
+            pathType: ImplementationSpecific

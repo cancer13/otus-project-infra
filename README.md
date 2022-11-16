@@ -47,6 +47,7 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
   - Подымает nginx-ingres в k8s через helm_release
   - Подымает gitlab в k8s через helm_release
 - Подключен runner к gitlab.com
+- Собрана рабочая версия helm chart'а
 
 # Notes
 Что бы разобраться с архитектурой приложения, зависимостями и версиями собрал контейнеры на локальной машине, а так же поднял вместе с окружением и переменными через docker-compose.
@@ -69,7 +70,7 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
   - подключи s3 для терраформ
   - решил использовать только gitlab-runner в кубере (по идее должно работать так же как на последней ДЗ, только код и вебморда на gitlab)
 
-ingress-controller через Helm
+Установка ingress-controller через Helm
 ```
 helm install ingress-nginx  ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
 ```

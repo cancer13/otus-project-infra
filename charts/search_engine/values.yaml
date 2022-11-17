@@ -23,10 +23,6 @@ ui:
   mongoPort: "27017"
   ingress:
     enabled: true
-    className: "nginx"
-    annotations: {}
-    hosts:
-      - host: localhost
-        paths:
-          - path: /
-            pathType: Prefix
+    class: nginx
+    path: /
+    host: localhost

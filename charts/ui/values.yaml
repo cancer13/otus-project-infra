@@ -21,9 +21,6 @@ ingress:
   class: nginx
   path: /
   host: localhost
-  annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
-
 
 mongoHost: "mongodb"
 mongoPort: 27017

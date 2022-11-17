@@ -1,0 +1,119 @@
+---
+image: alpine:latest
+
+variables:
+  CI_REGISTRY: 'docker.io'
+  CI_APPLICATION_REPOSITORY: $CI_REGISTRY_USER/$CI_PROJECT_TITLE
+  CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
+  GITLAB_ADDRESS: "gitlab.com"
+
+stages:
+  - staging
+  - production
+
+staging:
+  stage: staging
+  variables:
+    env: staging
+    KUBE_NAMESPACE: staging
+  environment:
+    name: staging
+    url: http://staging.$PROJECT_ADDRESS
+  only:
+    refs:
+      - main
+  before_script:
+    # installing dependencies
+    - apk add -U openssl curl tar gzip bash ca-certificates git
+    - wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    - wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk
+    - apk add glibc-2.35-r0.apk
+    - rm glibc-2.35-r0.apk
+    - curl https://mirrors.huaweicloud.com/helm/v3.9.4/helm-v3.9.4-linux-amd64.tar.gz | tar zx
+    - mv linux-amd64/helm /usr/bin/
+    - helm version
+    - curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x /usr/bin/kubectl
+    - kubectl version -o yaml
+    # ensuring namespace
+    - kubectl auth can-i create namespaces
+    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
+  script:
+    # deploy
+    - echo $KUBE_NAMESPACE
+    - export track="${1-stable}"
+    - >
+      if [[ "$track" != "stable" ]]; then
+        name="$name-$track"
+      fi
+    - echo "Download helm dependencies..."
+    - helm dep build infra/charts/search_engine
+    # - helm dep update reddit-deploy/reddit
+    - echo "Deploy helm release $name to $KUBE_NAMESPACE"
+    - echo "Upgrading existing release..."
+    - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/main/VERSION)
+    - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/main/VERSION)
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set ui.image.tag="$search_engine_crawler_version" --set comment.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
+    - >
+      helm upgrade --install \
+        --wait \
+        --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
+        --set ui.image.tag="$search_engine_crawler_version" \
+        --set comment.image.tag="$search_engine_ui_version" \
+        --namespace="$KUBE_NAMESPACE" \
+        --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
+        "$env" search_engine
+
+production:
+  stage: production
+  variables:
+    env: production
+    KUBE_NAMESPACE: production
+  environment:
+    name: production
+    url: http://$env.$PROJECT_ADDRESS
+  when: manual
+  only:
+    refs:
+      - main
+  before_script:
+    # installing dependencies
+    - apk add -U openssl curl tar gzip bash ca-certificates git
+    - wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    - wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk
+    - apk add glibc-2.35-r0.apk
+    - rm glibc-2.35-r0.apk
+    - curl https://mirrors.huaweicloud.com/helm/v3.9.4/helm-v3.9.4-linux-amd64.tar.gz | tar zx
+    - mv linux-amd64/helm /usr/bin/
+    - helm version
+    - curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x /usr/bin/kubectl
+    - kubectl version -o yaml
+    # ensuring namespace
+    - kubectl auth can-i create namespaces
+    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
+  script:
+    # deploy
+    - echo $KUBE_NAMESPACE
+    - export track="${1-stable}"
+    - >
+      if [[ "$track" != "stable" ]]; then
+        name="$name-$track"
+      fi
+    - echo "Download helm dependencies..."
+    - helm dep build infra/charts/search_engine
+    # - helm dep update reddit-deploy/reddit
+    - echo "Deploy helm release $name to $KUBE_NAMESPACE"
+    - echo "Upgrading existing release..."
+    - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/main/VERSION)
+    - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/main/VERSION)
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set ui.image.tag="$search_engine_crawler_version" --set comment.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
+    - >
+      helm upgrade --install \
+        --wait \
+        --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
+        --set ui.image.tag="$search_engine_crawler_version" \
+        --set comment.image.tag="$search_engine_ui_version" \
+        --namespace="$KUBE_NAMESPACE" \
+        --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
+        "$env" search_engine

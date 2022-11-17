@@ -5,7 +5,6 @@ metadata:
   name: {{ template "ui.fullname" . }}
   labels:
     {{- include "ui.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
 spec:

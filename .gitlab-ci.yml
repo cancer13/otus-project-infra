@@ -15,7 +15,6 @@ staging:
   stage: staging
   variables:
     env: staging
-    KUBE_NAMESPACE: staging
   environment:
     name: staging
     url: http://staging.$PROJECT_ADDRESS
@@ -35,11 +34,8 @@ staging:
     - curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x /usr/bin/kubectl
     - kubectl version -o yaml
-    # ensuring namespace
-    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
   script:
     # deploy
-    - echo $KUBE_NAMESPACE
     - export track="${1-stable}"
     - >
       if [[ "$track" != "stable" ]]; then
@@ -48,27 +44,25 @@ staging:
     - echo "Download helm dependencies..."
     - helm dep build charts/search_engine
     # - helm dep update reddit-deploy/reddit
-    - echo "Deploy helm release $name to $KUBE_NAMESPACE"
     - echo "Upgrading existing release..."
     - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/master/VERSION) # https://gitlab.com/otus-cancer13/search_engine_crawler/-/raw/master/VERSION
     - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/master/VERSION)
-    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$env" --create-namespace --version="$CI_PIPELINE_ID-$CI_JOB_ID" "otus-project-$env" charts/search_engine"
     - >
       helm upgrade --install \
         --wait \
         --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
         --set crawler.image.tag="$search_engine_crawler_version" \
         --set ui.image.tag="$search_engine_ui_version" \
-        --namespace="$KUBE_NAMESPACE" \
+        --namespace="$env" \
+        --create-namespace \
         --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
-        "$env" search_engine
-    - echo "http://staging.$PROJECT_ADDRESS"
+        "otus-project-$env" charts/search_engine
 
 production:
   stage: production
   variables:
     env: production
-    KUBE_NAMESPACE: production
   environment:
     name: production
     url: http://$env.$PROJECT_ADDRESS
@@ -89,11 +83,8 @@ production:
     - curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x /usr/bin/kubectl
     - kubectl version -o yaml
-    # ensuring namespace
-    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
   script:
     # deploy
-    - echo $KUBE_NAMESPACE
     - export track="${1-stable}"
     - >
       if [[ "$track" != "stable" ]]; then
@@ -102,17 +93,17 @@ production:
     - echo "Download helm dependencies..."
     - helm dep build charts/search_engine
     # - helm dep update reddit-deploy/reddit
-    - echo "Deploy helm release $name to $KUBE_NAMESPACE"
     - echo "Upgrading existing release..."
     - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/master/VERSION) # https://gitlab.com/otus-cancer13/search_engine_crawler/-/raw/master/VERSION
     - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/master/VERSION)
-    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$env" --create-namespace --version="$CI_PIPELINE_ID-$CI_JOB_ID" "otus-project-$env" charts/search_engine"
     - >
       helm upgrade --install \
         --wait \
         --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
         --set crawler.image.tag="$search_engine_crawler_version" \
         --set ui.image.tag="$search_engine_ui_version" \
-        --namespace="$KUBE_NAMESPACE" \
+        --namespace="$env" \
+        --create-namespace \
         --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
-        "$env" search_engine
+        "otus-project-$env" charts/search_engine

@@ -36,7 +36,7 @@ staging:
     - chmod +x /usr/bin/kubectl
     - kubectl version -o yaml
     # ensuring namespace
-    - kubectl auth can-i create namespaces
+    # - kubectl auth can-i create namespaces
     - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
   script:
     # deploy

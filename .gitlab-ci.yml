@@ -62,6 +62,7 @@ staging:
         --namespace="$KUBE_NAMESPACE" \
         --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
         "$env" search_engine
+    - echo "http://staging.$PROJECT_ADDRESS"
 
 production:
   stage: production

@@ -46,7 +46,7 @@ staging:
         name="$name-$track"
       fi
     - echo "Download helm dependencies..."
-    - helm dep build infra/charts/search_engine
+    - helm dep build charts/search_engine
     # - helm dep update reddit-deploy/reddit
     - echo "Deploy helm release $name to $KUBE_NAMESPACE"
     - echo "Upgrading existing release..."
@@ -100,7 +100,7 @@ production:
         name="$name-$track"
       fi
     - echo "Download helm dependencies..."
-    - helm dep build infra/charts/search_engine
+    - helm dep build charts/search_engine
     # - helm dep update reddit-deploy/reddit
     - echo "Deploy helm release $name to $KUBE_NAMESPACE"
     - echo "Upgrading existing release..."

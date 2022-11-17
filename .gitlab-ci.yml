@@ -50,15 +50,15 @@ staging:
     # - helm dep update reddit-deploy/reddit
     - echo "Deploy helm release $name to $KUBE_NAMESPACE"
     - echo "Upgrading existing release..."
-    - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/main/VERSION)
-    - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/main/VERSION)
-    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set ui.image.tag="$search_engine_crawler_version" --set comment.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
+    - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/master/VERSION) # https://gitlab.com/otus-cancer13/search_engine_crawler/-/raw/master/VERSION
+    - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/master/VERSION)
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
     - >
       helm upgrade --install \
         --wait \
         --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
-        --set ui.image.tag="$search_engine_crawler_version" \
-        --set comment.image.tag="$search_engine_ui_version" \
+        --set crawler.image.tag="$search_engine_crawler_version" \
+        --set ui.image.tag="$search_engine_ui_version" \
         --namespace="$KUBE_NAMESPACE" \
         --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
         "$env" search_engine
@@ -104,15 +104,15 @@ production:
     # - helm dep update reddit-deploy/reddit
     - echo "Deploy helm release $name to $KUBE_NAMESPACE"
     - echo "Upgrading existing release..."
-    - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/main/VERSION)
-    - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/main/VERSION)
-    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set ui.image.tag="$search_engine_crawler_version" --set comment.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
+    - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/master/VERSION) # https://gitlab.com/otus-cancer13/search_engine_crawler/-/raw/master/VERSION
+    - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/master/VERSION)
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$env" search_engine"
     - >
       helm upgrade --install \
         --wait \
         --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
-        --set ui.image.tag="$search_engine_crawler_version" \
-        --set comment.image.tag="$search_engine_ui_version" \
+        --set crawler.image.tag="$search_engine_crawler_version" \
+        --set ui.image.tag="$search_engine_ui_version" \
         --namespace="$KUBE_NAMESPACE" \
         --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
         "$env" search_engine

@@ -52,7 +52,7 @@ staging:
       helm upgrade --install \
         --wait \
         --set ui.ingress.host="$PROJECT_ADDRESS" \
-        --set ui.ingress.path="$env" \
+        --set ui.ingress.path="/$env" \
         --set crawler.image.tag="$search_engine_crawler_version" \
         --set ui.image.tag="$search_engine_ui_version" \
         --namespace="$env" \

@@ -70,7 +70,12 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
   - подключи s3 для терраформ
   - решил использовать только gitlab-runner в кубере (по идее должно работать так же как на последней ДЗ, только код и вебморда на gitlab)
 
-Установка ingress-controller через Helm
+Helm
 ```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add gitlab https://charts.gitlab.io 
+
+
 helm install ingress-nginx  ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
 ```

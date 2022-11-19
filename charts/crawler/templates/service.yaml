@@ -7,23 +7,19 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.portName }}
-      {{- with .Values.serviceMonitor.interval }}
-      interval: {{ . }}
+    - name: {{ .Values.service.portName }}
+      port: {{ .Values.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPort }}
+      {{- if .Values.service.appProtocol }}
+      appProtocol: {{ .Values.service.appProtocol }}
       {{- end }}
-      {{- with .Values.serviceMonitor.scrapeTimeout }}
-      scrapeTimeout: {{ . }}
-      {{- end }}
-      honorLabels: true
-      path: {{ .Values.serviceMonitor.path }}
-      scheme: {{ .Values.serviceMonitor.scheme }}
-      {{- if .Values.serviceMonitor.tlsConfig }}
-      tlsConfig:
-      {{- toYaml .Values.serviceMonitor.tlsConfig | nindent 6 }}
-      {{- end }}
-      {{- if .Values.serviceMonitor.relabelings }}
-      relabelings:
-      {{- toYaml .Values.serviceMonitor.relabelings | nindent 4 }}
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
+      nodePort: {{.Values.service.nodePort}}
+      {{ end }}
+      {{- if .Values.extraExposePorts }}
+      {{- tpl (toYaml .Values.extraExposePorts) . | nindent 4 }}
       {{- end }}
   selector:
     {{- include "crawler.selectorLabels" . | nindent 4 }}
+{{ end }}

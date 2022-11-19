@@ -22,4 +22,3 @@ spec:
       {{- end }}
   selector:
     {{- include "crawler.selectorLabels" . | nindent 4 }}
-{{ end }}

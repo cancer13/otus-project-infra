@@ -7,9 +7,18 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.port }}
+    - name: {{ .Values.service.portName }}
+      port: {{ .Values.service.port }}
       protocol: TCP
-      name: http
+      targetPort: {{ .Values.service.targetPort }}
+      {{- if .Values.service.appProtocol }}
+      appProtocol: {{ .Values.service.appProtocol }}
+      {{- end }}
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
+      nodePort: {{.Values.service.nodePort}}
+      {{ end }}
+      {{- if .Values.extraExposePorts }}
+      {{- tpl (toYaml .Values.extraExposePorts) . | nindent 4 }}
+      {{- end }}
   selector:
     {{- include "ui.selectorLabels" . | nindent 4 }}

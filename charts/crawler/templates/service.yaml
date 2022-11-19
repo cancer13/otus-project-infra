@@ -7,9 +7,23 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+    - port: {{ .Values.service.portName }}
+      {{- with .Values.serviceMonitor.interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .Values.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+      honorLabels: true
+      path: {{ .Values.serviceMonitor.path }}
+      scheme: {{ .Values.serviceMonitor.scheme }}
+      {{- if .Values.serviceMonitor.tlsConfig }}
+      tlsConfig:
+      {{- toYaml .Values.serviceMonitor.tlsConfig | nindent 6 }}
+      {{- end }}
+      {{- if .Values.serviceMonitor.relabelings }}
+      relabelings:
+      {{- toYaml .Values.serviceMonitor.relabelings | nindent 4 }}
+      {{- end }}
   selector:
     {{- include "crawler.selectorLabels" . | nindent 4 }}

@@ -30,7 +30,7 @@ spec:
     relabelings:
     {{- toYaml .Values.serviceMonitor.relabelings | nindent 4 }}
     {{- end }}
-  jobLabel: "{{ include "crawler.fullname" . }}"
+  jobLabel: "app.kubernetes.io/name"
   selector:
     matchLabels:
       {{- include "crawler.selectorLabels" . | nindent 8 }}

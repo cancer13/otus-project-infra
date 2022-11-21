@@ -2686,7 +2686,7 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    # additionalScrapeConfigs:
+    additionalScrapeConfigs: []
     #   - job_name: 'staging'
     #     kubernetes_sd_configs:
     #     - role: endpoints
@@ -2697,6 +2697,7 @@ prometheus:
     #         own_namespace: false
     #         names:
     #         - staging
+
       #   static_configs:
       #   - targets:
       #     - ':8000/metrics'

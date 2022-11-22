@@ -6,3 +6,4 @@
 .terraform*
 join-command
 tls.key
+*.key

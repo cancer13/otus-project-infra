@@ -33,6 +33,7 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
 
 Находясь в `infra/terraform` выполнить `terraform init` и `terraform apply`
 
+Деплой gitlab-runner'а происходит скриптом в `infra/gitlab/gitlab-runner-init.sh`
 
 
 

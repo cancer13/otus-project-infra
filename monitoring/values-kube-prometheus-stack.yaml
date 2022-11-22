@@ -2686,25 +2686,69 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
-    #   - job_name: 'staging'
-    #     kubernetes_sd_configs:
-    #     - role: endpoints
-    #       kubeconfig_file: ""
-    #       follow_redirects: true
-    #       enable_http2: true
-    #       namespaces:
-    #         own_namespace: false
-    #         names:
-    #         - staging
+    # additionalScrapeConfigs: []
+    additionalScrapeConfigs:
+      - job_name: 'serviceMonitor/staging/endpoints'
+        honor_timestamps: true
+        scrape_interval: 30s
+        scrape_timeout: 10s
+        metrics_path: /metrics
+        scheme: http
+        follow_redirects: true
+        enable_http2: true
+        kubernetes_sd_configs:
+        - role: endpoints
+          kubeconfig_file: ""
+          follow_redirects: true
+          enable_http2: true
+          namespaces:
+            own_namespace: false
+            names:
+            - staging
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
+          separator: ;
+          regex: Node;(.*)
+          target_label: node
+          replacement: ${1}
+          action: replace
+        - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
+          separator: ;
+          regex: Pod;(.*)
+          target_label: pod
+          replacement: ${1}
+          action: replace
+        - source_labels: [__meta_kubernetes_namespace]
+          separator: ;
+          regex: (.*)
+          target_label: namespace
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_service_name]
+          separator: ;
+          regex: (.*)
+          target_label: service
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_pod_name]
+          separator: ;
+          regex: (.*)
+          target_label: pod
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          separator: ;
+          regex: (.*)
+          target_label: container
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_service_name]
+          separator: ;
+          regex: (.*)
+          target_label: job
+          replacement: ${1}
+          action: replace
 
-      #   static_configs:
-      #   - targets:
-      #     - ':8000/metrics'
-      # - job_name: 'ui'
-      #   static_configs:
-      #   - targets:
-      #     - ':8000/metrics'
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node

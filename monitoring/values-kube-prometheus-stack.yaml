@@ -2499,7 +2499,7 @@ prometheus:
     ## Example which selects ServiceMonitors with label "prometheus" set to "somelabel"
     serviceMonitorSelector:
       matchLabels:
-        serviceMonitor: "true"
+        app.kubernetes.io/name: crawler
 
     ## Namespaces to be selected for ServiceMonitor discovery.
     ##

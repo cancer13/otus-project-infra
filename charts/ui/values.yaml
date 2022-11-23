@@ -31,7 +31,7 @@ serviceMonitor:
   enabled: true
   path: /metrics
   labels:
-    serviceMonitor: true
+    serviceMonitor: "true"
   interval: 1m
   scheme: http
   tlsConfig: {}

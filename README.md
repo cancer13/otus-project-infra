@@ -25,7 +25,7 @@ network_id                = "ID_СЕТИ"
 runner_registration_token = "ТОКЕН" # для подключения воркера к gitlab.com
 ```
 
-Для сохрания состояния на s3 выполнить:
+Перед запуском terraform не забыть добавить креды S3
 ```
 export ENV.AWS_ACCESS_KEY_ID=ВАШ_ACCESS_КЛЮЧ_ID
 export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
@@ -33,9 +33,14 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
 
 Находясь в `infra/terraform` выполнить `terraform init` и `terraform apply`
 
-Деплой gitlab-runner'а происходит скриптом в `infra/gitlab/gitlab-runner-init.sh`
+Деплой gitlab-runner'а происходит скриптом в `infra/gitlab/gitlab-runner-init.sh`, предварительно необходимо создать и положить токен в файл `register_token.key`
 
+Деплой мониторинга скриптом `infra/monitoring/helm_run-monitoring.sh`, предварительно необходимо сгенерировать ссылку slack webhook integration в файл `slack_webhook.key`
 
+Добавить переменные в gitlab
+PROJECT_ADDRESS - аддрес проекта (158.160.40.207.sslip.io) 
+CI_REGISTRY_USER - пользователь dockerhub
+CI_REGISTRY_PASSWORD - пароль от CI_REGISTRY_USER
 
 # Status
 - Добавлены Dockerfile в репозитории приложений
@@ -49,6 +54,7 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
   - Подымает gitlab в k8s через helm_release
 - Подключен runner к gitlab.com
 - Собрана рабочая версия helm chart'а
+- поднят мониторинг из helm
 
 # Notes
 Что бы разобраться с архитектурой приложения, зависимостями и версиями собрал контейнеры на локальной машине, а так же поднял вместе с окружением и переменными через docker-compose.
@@ -71,12 +77,14 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
   - подключи s3 для терраформ
   - решил использовать только gitlab-runner в кубере (по идее должно работать так же как на последней ДЗ, только код и вебморда на gitlab)
 
-Helm
+Helm repo
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo add gitlab https://charts.gitlab.io 
+```
 
-
+ingress-nginx без terraform
+```
 helm install ingress-nginx  ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
 ```

@@ -1,5 +1,5 @@
 #!/bin/zsh
-GITLAB_RUNNER_TOKEN="$(echo register_token.key)"
+GITLAB_RUNNER_TOKEN="$(cat register_token.key)"
 
 helm upgrade --install gitlab-runner gitlab/gitlab-runner \
     --set runnerRegistrationToken="$GITLAB_RUNNER_TOKEN" \

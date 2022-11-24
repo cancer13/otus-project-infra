@@ -4,12 +4,12 @@ dependencies:
   version: 0.1.6
 - name: crawler
   repository: file://../crawler
-  version: 0.1.3
+  version: 0.1.4
 - name: rabbitmq
   repository: file://../rabbitmq
   version: 0.1.0
 - name: mongodb
   repository: file://../mongodb
   version: 0.1.0
-digest: sha256:88d54611e2a41f32a5eeb66bdbf7308582fb47489f7473fe882dbc9ff59e03d0
-generated: "2022-11-24T13:55:44.791539+03:00"
+digest: sha256:f380a73f9d1dcc965482ac3ee19b39b1d2e75400ef594050f5ab4fbf4b3b7587
+generated: "2022-11-24T19:50:09.946975+03:00"

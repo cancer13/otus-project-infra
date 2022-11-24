@@ -106,4 +106,4 @@ env:
   CHECK_INTERVAL: "10"
   MONGO: ""
   MONGO_PORT: "27017"
-  URL: "http://info.cern.ch/"
+  URL: "localhost"

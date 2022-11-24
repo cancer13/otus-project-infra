@@ -13,74 +13,72 @@ resource "helm_release" "ingress-controller" {
   ]
 }
 
-resource "helm_release" "gitlab-runner" {
-  name             = "gitlab-runner"
-  namespace        = "gitlab-runner"
-  chart            = "gitlab-runner"
-  repository       = "https://charts.gitlab.io"
+resource "helm_release" "k8s-dashboard" {
+  name             = "k8s-dashboard"
+  chart            = "kubernetes-dashboard"
+  namespace        = "dashboard"
+  repository       = var.helm_repo_k8s_dashboard
+  timeout          = var.helm_timeout
   create_namespace = true
   reset_values     = false
-  timeout          = 900
 
   set {
-    name  = "gitlabUrl"
-    value = "https://gitlab.com/"
+    name  = "settings.itemsPerPage"
+    value = 30
   }
+
   set {
-    name  = "runnerRegistrationToken"
-    value = "${var.runner_registration_token}"
+    name  = "ingress.enabled"
+    value = true
   }
-  // enable monitoring on port :9252/metrics
+
   set {
-    name = "metrics.enabled"
-    value = "true"
+    name  = "service.type"
+    value = "LoadBalancer"
   }
-  set {
-    name = "rbac.clusterWideAccess"
-    value = "true"
-  }
-  set {
-    name = "rbac.create"
-    value = "true"
-  }
+
   depends_on = [
     yandex_kubernetes_cluster.k8s-cluster,
-    yandex_kubernetes_node_group.k8s-nodes
+    yandex_kubernetes_node_group.k8s-nodes,
+    helm_release.ingress-controller
   ]
 }
 
-
-// resource "helm_release" "k8s-dashboard" {
-//   name             = "k8s-dashboard"
-//   chart            = "kubernetes-dashboard"
-//   namespace        = "dashboard"
-//   repository       = var.helm_repo_k8s_dashboard
-//   timeout          = var.helm_timeout
+// resource "helm_release" "gitlab-runner" {
+//   name             = "gitlab-runner"
+//   namespace        = "gitlab-runner"
+//   chart            = "gitlab-runner"
+//   repository       = "https://charts.gitlab.io"
 //   create_namespace = true
 //   reset_values     = false
+//   timeout          = 900
 
 //   set {
-//     name  = "settings.itemsPerPage"
-//     value = 30
+//     name  = "gitlabUrl"
+//     value = "https://gitlab.com/"
 //   }
-
 //   set {
-//     name  = "ingress.enabled"
-//     value = true
+//     name  = "runnerRegistrationToken"
+//     value = "${var.runner_registration_token}"
 //   }
-
+//   // enable monitoring on port :9252/metrics
 //   set {
-//     name  = "service.type"
-//     value = "LoadBalancer"
+//     name = "metrics.enabled"
+//     value = "true"
 //   }
-
+//   set {
+//     name = "rbac.clusterWideAccess"
+//     value = "true"
+//   }
+//   set {
+//     name = "rbac.create"
+//     value = "true"
+//   }
 //   depends_on = [
 //     yandex_kubernetes_cluster.k8s-cluster,
-//     yandex_kubernetes_node_group.k8s-nodes,
-//     helm_release.ingress-controller
+//     yandex_kubernetes_node_group.k8s-nodes
 //   ]
 // }
-
 
 // resource "helm_release" "gitlab" {
 //   name             = "gitlab"

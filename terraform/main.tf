@@ -104,10 +104,10 @@ resource "yandex_kubernetes_node_group" "k8s-nodes" {
       subnet_ids         = [yandex_vpc_subnet.k8s-subnet.id]
     }
     resources {
-      memory = 4
-      cores  = 2
+      memory = 8
+      cores  = 4
       gpus = 0
-      // core_fraction = 50
+      core_fraction = 20
     }
     boot_disk {
       type = "network-hdd"
@@ -123,7 +123,7 @@ resource "yandex_kubernetes_node_group" "k8s-nodes" {
 
   scale_policy {
     fixed_scale {
-      size = 2
+      size = 1
     }
   }
 

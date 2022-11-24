@@ -1,7 +1,7 @@
 dependencies:
 - name: ui
   repository: file://../ui
-  version: 0.1.4
+  version: 0.1.5
 - name: crawler
   repository: file://../crawler
   version: 0.1.3
@@ -11,5 +11,5 @@ dependencies:
 - name: mongodb
   repository: file://../mongodb
   version: 0.1.0
-digest: sha256:1b50ecc00e73f369afdabb4cdf3ff7f06266096041dfc1de217613b795388329
-generated: "2022-11-23T20:41:16.235689+03:00"
+digest: sha256:5857584d5dc373f38f4705e0a9ded20ef3a64c94c184998274a0c3702cf1a058
+generated: "2022-11-24T13:33:06.685212+03:00"

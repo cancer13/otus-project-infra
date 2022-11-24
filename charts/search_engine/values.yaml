@@ -18,7 +18,7 @@ ui:
     repository: cancer13/search_engine_ui
     tag: ""
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 8000
   mongoHost: ""
   mongoPort: "27017"

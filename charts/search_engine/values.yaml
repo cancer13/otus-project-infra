@@ -24,6 +24,6 @@ ui:
   mongoPort: "27017"
   ingress:
     enabled: true
-    class: nginx
+    className: nginx
     path: /
     host: 158.160.40.207.sslip.io

@@ -39,7 +39,7 @@ serviceMonitor:
 
 ingress:
   enabled: true
-  class: nginx
+  className: nginx
   path: /
   host: localhost
 

@@ -11,5 +11,5 @@ dependencies:
 - name: mongodb
   repository: file://../mongodb
   version: 0.1.0
-digest: sha256:5857584d5dc373f38f4705e0a9ded20ef3a64c94c184998274a0c3702cf1a058
-generated: "2022-11-24T13:33:06.685212+03:00"
+digest: sha256:88d54611e2a41f32a5eeb66bdbf7308582fb47489f7473fe882dbc9ff59e03d0
+generated: "2022-11-24T13:55:44.791539+03:00"

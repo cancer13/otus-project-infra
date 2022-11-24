@@ -8,10 +8,10 @@ crawler:
   env:
     RMQ_HOST: ""
     EXCLUDE_URLS: ""
-    CHECK_INTERVAL: "10"
+    CHECK_INTERVAL: "30"
     MONGO: ""
     MONGO_PORT: "27017"
-    URL: "http://info.cern.ch/"
+    URL: "https://pages.github.com/"
 
 ui:
   image:

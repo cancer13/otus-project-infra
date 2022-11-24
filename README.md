@@ -37,10 +37,16 @@ export ENV.AWS_SECRET_ACCESS_KEY=ВАШ_ACCESS_КЛЮЧ
 
 Деплой мониторинга скриптом `infra/monitoring/helm_run-monitoring.sh`, предварительно необходимо сгенерировать ссылку slack webhook integration в файл `slack_webhook.key`
 
+grafana:
+Пользователь `admin`
+Пароль `kubectl get secret --namespace monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo`
+
 Добавить переменные в gitlab
-PROJECT_ADDRESS - аддрес проекта (158.160.40.207.sslip.io) 
+PROJECT_ADDRESS - аддрес проекта (пример 158.160.40.207.sslip.io) 
 CI_REGISTRY_USER - пользователь dockerhub
 CI_REGISTRY_PASSWORD - пароль от CI_REGISTRY_USER
+
+
 
 # Status
 - Добавлены Dockerfile в репозитории приложений

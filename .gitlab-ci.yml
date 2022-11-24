@@ -47,11 +47,10 @@ staging:
     - echo "Upgrading existing release..."
     - export search_engine_crawler_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_crawler/raw/master/VERSION)
     - export search_engine_ui_version=$(curl https://$GITLAB_ADDRESS/$CI_PROJECT_NAMESPACE/search_engine_ui/raw/master/VERSION)
-    - echo "helm upgrade --install --wait --timeout 15m --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$env" --create-namespace --version="$CI_PIPELINE_ID-$CI_JOB_ID" "otus-project-$env" charts/search_engine"
+    - echo "helm upgrade --install --wait --set ui.ingress.host="$env.$PROJECT_ADDRESS" --set crawler.image.tag="$search_engine_crawler_version" --set ui.image.tag="$search_engine_ui_version" --namespace="$env" --create-namespace --version="$CI_PIPELINE_ID-$CI_JOB_ID" "otus-project-$env" charts/search_engine"
     - >
       helm upgrade --install \
         --wait \
-        --timeout 15m \
         --set ui.ingress.host="$env.$PROJECT_ADDRESS" \
         --set crawler.image.tag="$search_engine_crawler_version" \
         --set ui.image.tag="$search_engine_ui_version" \

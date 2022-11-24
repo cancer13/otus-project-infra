@@ -2497,11 +2497,11 @@ prometheus:
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
     ##
-    # serviceMonitorSelector: {}
+    serviceMonitorSelector: {}
     ## Example which selects ServiceMonitors with label "prometheus" set to "somelabel"
-    serviceMonitorSelector:
-      matchLabels:
-        app.kubernetes.io/name: crawler
+    # serviceMonitorSelector:
+    #   matchLabels:
+    #     app.kubernetes.io/name: crawler
 
     ## Namespaces to be selected for ServiceMonitor discovery.
     ##

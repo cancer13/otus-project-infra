@@ -13,36 +13,36 @@ resource "helm_release" "ingress-controller" {
   ]
 }
 
-resource "helm_release" "k8s-dashboard" {
-  name             = "k8s-dashboard"
-  chart            = "kubernetes-dashboard"
-  namespace        = "dashboard"
-  repository       = var.helm_repo_k8s_dashboard
-  timeout          = var.helm_timeout
-  create_namespace = true
-  reset_values     = false
+// resource "helm_release" "k8s-dashboard" {
+//   name             = "k8s-dashboard"
+//   chart            = "kubernetes-dashboard"
+//   namespace        = "dashboard"
+//   repository       = var.helm_repo_k8s_dashboard
+//   timeout          = var.helm_timeout
+//   create_namespace = true
+//   reset_values     = false
 
-  set {
-    name  = "settings.itemsPerPage"
-    value = 30
-  }
+//   set {
+//     name  = "settings.itemsPerPage"
+//     value = 30
+//   }
 
-  set {
-    name  = "ingress.enabled"
-    value = true
-  }
+//   set {
+//     name  = "ingress.enabled"
+//     value = true
+//   }
 
-  set {
-    name  = "service.type"
-    value = "LoadBalancer"
-  }
+//   set {
+//     name  = "service.type"
+//     value = "LoadBalancer"
+//   }
 
-  depends_on = [
-    yandex_kubernetes_cluster.k8s-cluster,
-    yandex_kubernetes_node_group.k8s-nodes,
-    helm_release.ingress-controller
-  ]
-}
+//   depends_on = [
+//     yandex_kubernetes_cluster.k8s-cluster,
+//     yandex_kubernetes_node_group.k8s-nodes,
+//     helm_release.ingress-controller
+//   ]
+// }
 
 // resource "helm_release" "gitlab-runner" {
 //   name             = "gitlab-runner"

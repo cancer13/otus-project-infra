@@ -2751,6 +2751,66 @@ prometheus:
           replacement: ${1}
           action: replace
 
+      - job_name: 'serviceMonitor/production/endpoints'
+        honor_timestamps: true
+        scrape_interval: 30s
+        scrape_timeout: 10s
+        metrics_path: /metrics
+        scheme: http
+        follow_redirects: true
+        enable_http2: true
+        kubernetes_sd_configs:
+        - role: endpoints
+          kubeconfig_file: ""
+          follow_redirects: true
+          enable_http2: true
+          namespaces:
+            own_namespace: false
+            names:
+            - production
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
+          separator: ;
+          regex: Node;(.*)
+          target_label: node
+          replacement: ${1}
+          action: replace
+        - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
+          separator: ;
+          regex: Pod;(.*)
+          target_label: pod
+          replacement: ${1}
+          action: replace
+        - source_labels: [__meta_kubernetes_namespace]
+          separator: ;
+          regex: (.*)
+          target_label: namespace
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_service_name]
+          separator: ;
+          regex: (.*)
+          target_label: service
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_pod_name]
+          separator: ;
+          regex: (.*)
+          target_label: pod
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          separator: ;
+          regex: (.*)
+          target_label: container
+          replacement: $1
+          action: replace
+        - source_labels: [__meta_kubernetes_service_name]
+          separator: ;
+          regex: (.*)
+          target_label: job
+          replacement: ${1}
+          action: replace
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
